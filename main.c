@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#define INFINITY (1<<20)
+#include <unistd.h>
+
+#define INFINITY (1<<20);
 
 typedef struct p
 {
@@ -12,6 +14,7 @@ typedef struct p
 } PESSOA;
 
 void menu();
+void criarArquivo();
 void carregaArquivo();
 void imprimeArquivo();
 void editaArquivo();
@@ -23,6 +26,20 @@ int ultimoID();
 PESSOA lista[100];
 int cont;
 FILE *arquivo;
+
+//Criar arquivo e escrever nele no formato %d ; %s ; %s ; %s
+void criarEscreverArquivo(){
+    arquivo = fopen("pessoa.txt", "w+");
+    int i;
+    //Laço de repetição responsável por percorrer o vetor
+    for(i = 0; i<cont; i++)
+    {
+        //Escreve no arquivoNovo.txt seguindo um novo formato
+        fprintf(arquivo, "%d ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome, lista[i].cpf, lista[i].dataNascimento);
+    }
+    //Fecha os dois arquivos que foram abertos com a função fopen
+    fclose(arquivo);
+}
 
 void carregaArquivo()
 {
@@ -42,21 +59,18 @@ void cadastraArquivo()
     printf("1 - Cadastrar Pessoa\n2 - Cadastrar Telefone\n");
     scanf("%d",&op);
     
-    PESSOA novaPessoa;
-    //Cadastrar o registro na memória
-    printf("Digite o nome\n");
-    scanf("%s", novaPessoa.nome);
-    printf("Digite o CPF\n");
-    scanf("%s", novaPessoa.cpf);
-    printf("Digite a data de nascimento\n");
-    scanf("%s", novaPessoa.dataNascimento);
-    
-    arquivo = fopen("pessoa.txt", "a+");
-    //Escreve no arquivoNovo.txt seguindo um novo formato
-    fprintf(arquivo, "%d ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome, novaPessoa.cpf, novaPessoa.dataNascimento);
-    //Fecha os dois arquivos que foram abertos com a função fopen
-    fclose(arquivo);
-    
+    if(op==1){
+        PESSOA novaPessoa;
+        //Cadastrar o registro na memória
+        printf("Digite o nome\n");
+        scanf("%s", novaPessoa.nome);
+        printf("Digite o CPF\n");
+        scanf("%s", novaPessoa.cpf);
+        printf("Digite a data de nascimento\n");
+        scanf("%s", novaPessoa.dataNascimento);
+        
+        criarEscreverArquivo();
+    } 
 }
 
 
