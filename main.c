@@ -1,4 +1,4 @@
-//Adiconado dados de telefone e email
+//O codigo a seguir depende que os arquivos sejam criados. é posssivel fazer inserção de telefones em outro arquivo
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -40,35 +40,32 @@ void carregaArquivo()
     
     cont = 0;
     arquivo = fopen("pessoa.txt", "r+");
-    arquivoTelefone = fopen("pessoa.txt", "r+");
+    arquivoTelefone = fopen("telefone.txt", "r+");
     
-    if ((arquivo != NULL) && (arquivoTelefone != NULL)) {
+    if (arquivo != NULL) {
+        //printf("Entrou aqui");
+        ///rewind(arquivo);
         while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
+            //printf("%d ; %s ; %s ; %s ; %s\n", lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento);
             cont++;
         }
-        cont=0;
-        while(fscanf(arquivoTelefone,"%d ; %s", &telefoneStruct[cont].idPessoa, telefoneStruct[cont].telefone)!= EOF){
-            cont++;
-        }
-        fclose(arquivo);
-        fclose(arquivoTelefone);
-        
-        
-    }else if (arquivo != NULL){
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
-            cont++;
-        }
-        
-        arquivo = fopen("telefone.txt", "w+");
-        fclose(arquivo);
-        fclose(arquivoTelefone);
-        
-        
+        fclose(arquivo);           
     }else{
-        arquivo = fopen("pessoa.txt", "w+");
-        arquivo = fopen("telefone.txt", "w+");
-        fclose(arquivo);
-        fclose(arquivoTelefone);
+        printf("Não foi possivel abrir o arquivo");
+    }
+
+
+
+    if (arquivoTelefone != NULL) {
+        int cont_telefone = 0;
+        //printf("Entrou aqui");
+        //rewind(arquivoTelefone);
+        while(fscanf(arquivoTelefone,"%d ; %s", &telefoneStruct[cont].idPessoa,telefoneStruct[cont].telefone)!= EOF){
+            cont_telefone++;
+        }
+        fclose(arquivoTelefone);           
+    }else{
+        printf("Não foi possivel abrir o arquivo Telefone");
     }
 }
 
@@ -154,16 +151,23 @@ void cadastraArquivo()
             printf("\nDigite o ID da pessoa: ");
             scanf("%d",&ID_comparacao);
             
-            for(int i = 0; i<cont; i++)
+            int i;
+            for(i = 0; i<cont; i++)
             {
                 if(lista[i].IDPessoa == ID_comparacao)
                 {
                     printf("%s, Digite o telefone: ",lista[i].nome);
                     scanf("%s",novoTelefone.telefone);
-                    arquivoTelefone = fopen("pessoa.txt", "a+");
+                    arquivoTelefone = fopen("telefone.txt", "a+");
                     fprintf(arquivoTelefone, "%d ; %s \n", lista[i].IDPessoa, novoTelefone.telefone);
                     fclose(arquivoTelefone);
+                    carregaArquivo();
+                    break;
                 }
+            }
+            
+            if(i==cont){
+                printf("ID inexistente\n");
             }
             
         }
