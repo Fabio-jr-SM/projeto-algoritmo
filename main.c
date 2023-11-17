@@ -1,4 +1,4 @@
-//https://www.cprogressivo.net/2013/11/Como-ler-arquivos-em-C-As-funcoes-fgetc-fscanf-fgets.html
+//Codigo basico - CRIA ARQUIVO CASO NÃO EXISTA E CADASTRA/EDITA/EXCLUI OU CONSULTA
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
