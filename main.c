@@ -8,11 +8,17 @@ typedef struct p
 {
     int IDPessoa;
     char nome[31];
-    char telefone[12];
     char email[31];
     char cpf[12];
     char dataNascimento[11];
 } PESSOA;
+
+typedef struct t
+{
+    int idTelefone, idPessoa;
+	char telefone[12];
+} TELEFONE;
+
 
 void carregaArquivo();
 void imprimeArquivo();
@@ -33,7 +39,7 @@ void carregaArquivo()
     arquivo = fopen("pessoa.txt", "r+");
     
     if (arquivo != NULL) {
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].telefone,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
+        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
             cont++;
         }
         fclose(arquivo);
@@ -48,14 +54,12 @@ void imprimeArquivo()
     int i;
     for(i = 0; i<cont; i++)
     {
-        printf("%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+        printf("%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
 }
 
 void editaArquivo()
 {
-    //Alterar o registro na memória
-    
     int i;
     int IDPessoaAlteracao;
     printf("Digite o ID para alteracao\n");
@@ -73,7 +77,7 @@ void editaArquivo()
     arquivo = fopen("pessoa.txt", "w+");
     for(i = 0; i<cont; i++)
     {
-        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s \n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
     fclose(arquivo);
 }
@@ -89,7 +93,7 @@ void excluiArquivo()
     {
         if(lista[i].IDPessoa != IDPessoaExclusao)
         {
-            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
         }
     }
     fclose(arquivo);
@@ -97,22 +101,34 @@ void excluiArquivo()
 
 void cadastraArquivo()
 {
-    PESSOA novaPessoa;
-    printf("Digite o nome\n");
-    scanf("%s", novaPessoa.nome);
-    printf("Digite o Telefone\n");
-    scanf("%s", novaPessoa.telefone);
-    printf("Digite o Email\n");
-    scanf("%s", novaPessoa.email);
-    printf("Digite o CPF\n");
-    scanf("%s", novaPessoa.cpf);
-    printf("Digite a data de nascimento\n");
-    scanf("%s", novaPessoa.dataNascimento);
-    
-    arquivo = fopen("pessoa.txt", "a+");
-    fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome,novaPessoa.telefone,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento);
-    fclose(arquivo);
-    
+    int op;
+    printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n")
+    scanf("%d",&op);
+    while(op!=3){
+        if(op==1){
+            PESSOA novaPessoa;
+            printf("Digite o nome: ");
+            scanf("%s", novaPessoa.nome);
+            printf("Digite o Email: ");
+            scanf("%s", novaPessoa.email);
+            printf("Digite o CPF: ");
+            scanf("%s", novaPessoa.cpf);
+            printf("Digite a data de nascimento: ");
+            scanf("%s", novaPessoa.dataNascimento);
+            
+            arquivo = fopen("pessoa.txt", "a+");
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento);
+            fclose(arquivo);
+        }else if(op==2){
+            TELEFONE novoTelefone;
+            for(int i = 0; i<cont; i++){
+                printf("%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+            }
+
+            printf("Digite o ID: ");
+            scanf("")
+        }
+    }
 }
 
 int ultimoID()
@@ -144,19 +160,19 @@ void menu()
         switch(menu)
         {
             case 1:
-                printf("CADASTRA\n");
+                printf("\nCADASTRA\n");
                 cadastraArquivo();
                 break;
             case 2:
-                printf("EDITA\n");
+                printf("\nEDITA\n");
                 editaArquivo();
                 break;
             case 3:
-                printf("EXCLUI\n");
+                printf("\nEXCLUI\n");
                 excluiArquivo();
                 break;
             case 4:
-                printf("IMPRIME\n");
+                printf("\nIMPRIME\n");
                 imprimeArquivo();
                 break;
             case 5:
