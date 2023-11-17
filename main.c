@@ -1,4 +1,4 @@
-//Codigo basico - CRIA ARQUIVO CASO NÃO EXISTA E CADASTRA/EDITA/EXCLUI OU CONSULTA
+//Adiconado dados de telefone e email
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -8,6 +8,8 @@ typedef struct p
 {
     int IDPessoa;
     char nome[31];
+    char telefone[12];
+    char email[31];
     char cpf[12];
     char dataNascimento[11];
 } PESSOA;
@@ -31,7 +33,7 @@ void carregaArquivo()
     arquivo = fopen("pessoa.txt", "r+");
     
     if (arquivo != NULL) {
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
+        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].telefone,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
             cont++;
         }
         fclose(arquivo);
@@ -46,7 +48,7 @@ void imprimeArquivo()
     int i;
     for(i = 0; i<cont; i++)
     {
-        printf("%d ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome, lista[i].cpf, lista[i].dataNascimento);
+        printf("%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
 }
 
@@ -71,7 +73,7 @@ void editaArquivo()
     arquivo = fopen("pessoa.txt", "w+");
     for(i = 0; i<cont; i++)
     {
-        fprintf(arquivo, "%d ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome, lista[i].cpf, lista[i].dataNascimento);
+        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
     fclose(arquivo);
 }
@@ -87,7 +89,7 @@ void excluiArquivo()
     {
         if(lista[i].IDPessoa != IDPessoaExclusao)
         {
-            fprintf(arquivo, "%d ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome, lista[i].cpf, lista[i].dataNascimento);
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].telefone,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
         }
     }
     fclose(arquivo);
@@ -98,13 +100,17 @@ void cadastraArquivo()
     PESSOA novaPessoa;
     printf("Digite o nome\n");
     scanf("%s", novaPessoa.nome);
+    printf("Digite o Telefone\n");
+    scanf("%s", novaPessoa.telefone);
+    printf("Digite o Email\n");
+    scanf("%s", novaPessoa.email);
     printf("Digite o CPF\n");
     scanf("%s", novaPessoa.cpf);
     printf("Digite a data de nascimento\n");
     scanf("%s", novaPessoa.dataNascimento);
     
     arquivo = fopen("pessoa.txt", "a+");
-    fprintf(arquivo, "%d ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome, novaPessoa.cpf, novaPessoa.dataNascimento);
+    fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome,novaPessoa.telefone,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento);
     fclose(arquivo);
     
 }
