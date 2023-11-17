@@ -15,7 +15,7 @@ typedef struct p
 
 typedef struct t
 {
-    int idTelefone, idPessoa;
+    int idPessoa;
 	char telefone[12];
 } TELEFONE;
 
@@ -29,23 +29,46 @@ int ultimoID();
 
 
 PESSOA lista[100];
+TELEFONE telefoneStruct[100];
+
 int cont;
 FILE *arquivo;
+FILE *arquivoTelefone;
 
 void carregaArquivo()
 {
     
     cont = 0;
     arquivo = fopen("pessoa.txt", "r+");
+    arquivoTelefone = fopen("pessoa.txt", "r+");
     
-    if (arquivo != NULL) {
+    if ((arquivo != NULL) && (arquivoTelefone != NULL)) {
         while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
             cont++;
         }
+        cont=0;
+        while(fscanf(arquivoTelefone,"%d ; %s", &telefoneStruct[cont].idPessoa, telefoneStruct[cont].telefone)!= EOF){
+            cont++;
+        }
         fclose(arquivo);
+        fclose(arquivoTelefone);
+        
+        
+    }else if (arquivo != NULL){
+        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
+            cont++;
+        }
+        
+        arquivo = fopen("telefone.txt", "w+");
+        fclose(arquivo);
+        fclose(arquivoTelefone);
+        
+        
     }else{
         arquivo = fopen("pessoa.txt", "w+");
+        arquivo = fopen("telefone.txt", "w+");
         fclose(arquivo);
+        fclose(arquivoTelefone);
     }
 }
 
@@ -102,7 +125,7 @@ void excluiArquivo()
 void cadastraArquivo()
 {
     int op;
-    printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n")
+    printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n(3) Return\n");
     scanf("%d",&op);
     while(op!=3){
         if(op==1){
@@ -119,15 +142,33 @@ void cadastraArquivo()
             arquivo = fopen("pessoa.txt", "a+");
             fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", ultimoID()+1, novaPessoa.nome,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento);
             fclose(arquivo);
+            
+            carregaArquivo();
         }else if(op==2){
+            
+            imprimeArquivo();
+            
             TELEFONE novoTelefone;
-            for(int i = 0; i<cont; i++){
-                printf("%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+            int ID_comparacao;
+            
+            printf("\nDigite o ID da pessoa: ");
+            scanf("%d",&ID_comparacao);
+            
+            for(int i = 0; i<cont; i++)
+            {
+                if(lista[i].IDPessoa == ID_comparacao)
+                {
+                    printf("%s, Digite o telefone: ",lista[i].nome);
+                    scanf("%s",novoTelefone.telefone);
+                    arquivoTelefone = fopen("pessoa.txt", "a+");
+                    fprintf(arquivoTelefone, "%d ; %s \n", lista[i].IDPessoa, novoTelefone.telefone);
+                    fclose(arquivoTelefone);
+                }
             }
-
-            printf("Digite o ID: ");
-            scanf("")
+            
         }
+        printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n(3) Return\n");
+        scanf("%d",&op);
     }
 }
 
