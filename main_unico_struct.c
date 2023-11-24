@@ -1,8 +1,9 @@
-//Erro na linha 103. o codigo não finaliza o cadastro do telefone
+//O codigo a seguir depende que os arquivos sejam criados. é posssivel fazer inserção de telefones em outro arquivo
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
+#include <string.h>
 #define INFINITY (1<<20)
 
 typedef struct p
@@ -35,10 +36,10 @@ void carregaArquivo()
     cont = 0;
     arquivo = fopen("pessoa.txt", "r+");
     
-    if (arquivo != NULL) {
+    if (arquivo != NULL) { 
         //printf("Entrou aqui");
         ///rewind(arquivo);
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
+        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento,lista[cont].telefone)!= EOF){
             //printf("%d ; %s ; %s ; %s ; %s\n", lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento);
             cont++;
         }
@@ -78,35 +79,68 @@ void cadastraArquivo()
             
             imprimeArquivo();
             
+            int op_cadastro_tel;
             PESSOA novoTelefone;
-            int ID_comparacao;
-            bool encontrouID = false;
+            char nome_comparacao[31];
+            int ID_comparacao, encontrouID = 0,encontrouNOME=0;
             
-            printf("\nDigite o ID da pessoa: ");
-            scanf("%d",&ID_comparacao);
+            printf("\n(1) Cadastrar usando o Nome\n(2) Cadastrar usando o ID\n(3) Return\n");
+            scanf("%d",&op_cadastro_tel);
             
-            int i;
-            for(i = 0; i<cont; i++)
-            {
-                if(lista[i].IDPessoa == ID_comparacao)
+            if(op_cadastro_tel==1){
+                printf("Digite o nome: ");
+                scanf("%s",nome_comparacao);
+                for(int i = 0; i<cont; i++)
                 {
-                    printf("%s, Digite o telefone: ",lista[i].nome);
-                    scanf("%s",novoTelefone.telefone);
-                    
-                    arquivo = fopen("pessoa.txt", "w+");
-                    fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento, novoTelefone.telefone);
-                    fclose(arquivo);
-                    
-                    carregaArquivo();
-                    
-                    encontrouID = true; 
-                    break; 
+                    if(strcmp(nome_comparacao, lista[i].nome) == 0)
+                    {
+                        printf("%s, Digite o telefone: ",lista[i].nome);
+                        scanf("%s",novoTelefone.telefone);
+                        
+                        arquivo = fopen("pessoa.txt", "w+");
+                        
+                        for(int i; i<cont;i++){
+                            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento, novoTelefone.telefone);
+                        }
+                        fclose(arquivo);
+                        
+                        carregaArquivo();
 
+                        encontrouNOME = 1;
+                    }
+
+                    if(encontrouNOME!=1){
+                        printf("Nome inexistente\n");
+                    }
                 }
-            }
-            
-            if(!encontrouID){
-                printf("ID inexistente\n");
+            }else if(op_cadastro_tel==2){
+                int i;
+
+                printf("\nDigite o ID da pessoa: ");
+                scanf("%d",&ID_comparacao);
+
+                for(i = 0; i<cont; i++)
+                {
+                    if(lista[i].IDPessoa == ID_comparacao)
+                    {
+                        printf("%s, Digite o telefone: ",lista[i].nome);
+                        scanf("%s",novoTelefone.telefone);
+                        
+                        arquivo = fopen("pessoa.txt", "w+");
+                        for(int i; i<cont;i++){
+                            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento, novoTelefone.telefone);
+                        }
+                        fclose(arquivo);
+                        
+                        carregaArquivo();
+                        
+                        encontrouID = 1; 
+                    }
+                }
+                
+                if(encontrouID!=1){
+                    printf("ID inexistente\n");
+                }
             }
             
         }
