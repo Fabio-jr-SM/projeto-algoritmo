@@ -6,14 +6,14 @@
 #include <string.h>
 #define INFINITY (1<<20)
 
-typedef struct p
-{
+typedef struct p{
     int IDPessoa;
     char nome[31];
     char email[31];
     char cpf[12];
     char dataNascimento[11];
-	char telefone[12];
+	char **telefones;
+    int numTelefones;
 } PESSOA;
 
 void carregaArquivo();
@@ -21,6 +21,8 @@ void imprimeArquivo();
 void editaArquivo();
 void excluiArquivo();
 void cadastraArquivo();
+void cadastrarTelefones();
+void liberarTelefones();
 int ultimoID();
 
 
@@ -39,7 +41,7 @@ void carregaArquivo()
     if (arquivo != NULL) { 
         //printf("Entrou aqui");
         ///rewind(arquivo);
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento,lista[cont].telefone)!= EOF){
+        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
             //printf("%d ; %s ; %s ; %s ; %s\n", lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento);
             cont++;
         }
@@ -94,7 +96,11 @@ void cadastraArquivo()
                 {
                     if(strcmp(nome_comparacao, lista[i].nome) == 0)
                     {
-                        printf("%s, Digite o telefone: ",lista[i].nome);
+                       
+                        cadastrarTelefones(&novoTelefone);
+                        lista[i].telefones = novoTelefone.telefones;
+                        lista[i].numTelefones = novoTelefone.numTelefones;
+                        /*printf("%s, Digite o telefone: ",lista[i].nome);
                         scanf("%s",novoTelefone.telefone);
                         
                         arquivo = fopen("pessoa.txt", "w+");
@@ -104,9 +110,15 @@ void cadastraArquivo()
                         }
                         fclose(arquivo);
                         
-                        carregaArquivo();
-
+                        carregaArquivo();*/
                         encontrouNOME = 1;
+                        
+                        if (novoTelefone.numTelefones > 0) {
+                            printf("Telefones:\n");
+                            for (int i = 0; i < novoTelefone.numTelefones; i++) {
+                                printf("%d. %s\n", i + 1, novoTelefone.telefones[i]);
+                            }
+                        }
                     }
 
                     if(encontrouNOME!=1){
@@ -123,7 +135,11 @@ void cadastraArquivo()
                 {
                     if(lista[i].IDPessoa == ID_comparacao)
                     {
-                        printf("%s, Digite o telefone: ",lista[i].nome);
+                        
+                        cadastrarTelefones(&novoTelefone);
+                        lista[i].telefones = novoTelefone.telefones;
+                        lista[i].numTelefones = novoTelefone.numTelefones;
+                        /*printf("%s, Digite o telefone: ",lista[i].nome);
                         scanf("%s",novoTelefone.telefone);
                         
                         arquivo = fopen("pessoa.txt", "w+");
@@ -132,9 +148,17 @@ void cadastraArquivo()
                         }
                         fclose(arquivo);
                         
-                        carregaArquivo();
+                        carregaArquivo();*/
                         
                         encontrouID = 1; 
+                        
+                        if (novoTelefone.numTelefones > 0) {
+                            printf("Telefones:\n");
+                            for (int i = 0; i < novoTelefone.numTelefones; i++) {
+                                printf("%d. %s\n", i + 1, novoTelefone.telefones[i]);
+                            }
+                        }
+
                     }
                 }
                 
@@ -142,11 +166,13 @@ void cadastraArquivo()
                     printf("ID inexistente\n");
                 }
             }
+           // liberarTelefones(&novoTelefone);
             
         }
         printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n(3) Return\n");
         scanf("%d",&op);
     }
+    
 }
 
 
@@ -170,7 +196,7 @@ void editaArquivo()
     arquivo = fopen("pessoa.txt", "w+");
     for(i = 0; i<cont; i++)
     {
-        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento, lista[i].telefone);
+        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
     fclose(arquivo);
 }
@@ -188,7 +214,7 @@ void excluiArquivo()
     {
         if(lista[i].IDPessoa != IDPessoaExclusao)
         {
-            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento,lista[i].telefone);
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
         }
     }
     fclose(arquivo);
@@ -199,13 +225,53 @@ void excluiArquivo()
 void imprimeArquivo()
 {
     int i;
-     printf("| %-2s | %-30s | %-30s | %-12s | %-11s | %-11s |\n", "ID", "Nome", "Email","CPF","Nascimento","telefone");
+     printf("| %-2s | %-30s | %-30s | %-12s | %-11s |\n", "ID", "Nome", "Email","CPF","Nascimento");
     for(i = 0; i<cont; i++)
     {
-        printf("| %-2d | %-30s | %-30s | %-12s | %-11s | %-11s |\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento,lista[i].telefone);
+        printf("| %-2d | %-30s | %-30s | %-12s | %-11s |\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
+        
+        if (lista[i].numTelefones > 0) {
+            printf("Telefones:\n");
+            for (int j = 0; j < lista[i].numTelefones; j++) {
+                printf("%d. %s\n", j + 1, lista[i].telefones[j]);
+            }
+        }
     }
 }
 
+
+// Função para cadastrar telefones dinamicamente
+void cadastrarTelefones(PESSOA *novoTelefone) {
+    char resposta;
+
+    // Alocando inicialmente espaço para 5 telefones
+    novoTelefone->telefones = (char **)malloc(5 * sizeof(char *));
+    novoTelefone->numTelefones = 0;
+
+    do {
+        // Alocando espaço para armazenar um telefone
+        novoTelefone->telefones[novoTelefone->numTelefones] = (char *)malloc(15 * sizeof(char));
+
+        printf("Digite o telefone: ");
+        scanf("%s", novoTelefone->telefones[novoTelefone->numTelefones]);
+
+        novoTelefone->numTelefones++;
+
+        // Perguntando se o usuário deseja cadastrar outro telefone
+        printf("Deseja cadastrar outro telefone? (s/n): ");
+        scanf(" %c", &resposta);
+    } while (resposta == 's');
+
+
+}
+
+// Função para liberar a memória alocada para os telefones
+void liberarTelefones(PESSOA *novoTelefone) {
+    for (int i = 0; i < novoTelefone->numTelefones; i++) {
+        free(novoTelefone->telefones[i]);
+    }
+    //free(novoTelefone->telefones);
+}
 
 int ultimoID()
 {
@@ -219,6 +285,8 @@ int ultimoID()
         }
     }
 }
+
+
 
 
 void menu()
