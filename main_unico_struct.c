@@ -17,6 +17,7 @@ typedef struct p{
 } PESSOA;
 
 void carregaArquivo();
+void escreverArquivo();
 void imprimeArquivo();
 void editaArquivo();
 void excluiArquivo();
@@ -31,27 +32,49 @@ int cont;
 FILE *arquivo;
 
 
-//====CARREGA ARQUIVO====
+//====CARREGA ARQUIVO (ARQUIVO PARA MEMORIA)====
 void carregaArquivo()
 {
-    
     cont = 0;
     arquivo = fopen("pessoa.txt", "r+");
-    
-    if (arquivo != NULL) { 
-        //printf("Entrou aqui");
-        ///rewind(arquivo);
-        while(fscanf(arquivo,"%d ; %s ; %s ; %s ; %s", &lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento)!= EOF){
-            //printf("%d ; %s ; %s ; %s ; %s\n", lista[cont].IDPessoa, lista[cont].nome,lista[cont].email, lista[cont].cpf, lista[cont].dataNascimento);
+
+    if (arquivo != NULL) {
+        while (fscanf(arquivo, "%d ; %s ; %s ; %s ; %s ; %d",
+                      &lista[cont].IDPessoa, lista[cont].nome, lista[cont].email,
+                      lista[cont].cpf, lista[cont].dataNascimento, &lista[cont].numTelefones) != EOF) {
+            if (lista[cont].numTelefones > 0) {
+                lista[cont].telefones = (char **)malloc(lista[cont].numTelefones * sizeof(char *));
+                for (int i = 0; i < lista[cont].numTelefones; i++) {
+                    lista[cont].telefones[i] = (char *)malloc(15 * sizeof(char));
+                    fscanf(arquivo, " ; %s", lista[cont].telefones[i]);
+                }
+            }
+
             cont++;
         }
-        fclose(arquivo);           
-    }else{
-        printf("\nNão foi possivel abrir o arquivo\n");
-        exit(0);
+        fclose(arquivo);
+    } else {
+        printf("\nNão foi possível abrir o arquivo\n");
+        exit(1);
     }
 }
 
+
+//====CARREGA MEMORIA (MEMORIA PARA ARQUIVO)====
+void escreverArquivo(){
+    arquivo = fopen("pessoa.txt", "w+");
+
+    for(int i = 0; i < cont; i++) {
+        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %d", lista[i].IDPessoa, lista[i].nome, lista[i].email, lista[i].cpf, lista[i].dataNascimento, lista[i].numTelefones);
+
+        if(lista[i].numTelefones>0){
+            for (int j = 0; j < lista[i].numTelefones; j++) {
+                fprintf(arquivo, " ; %s", lista[i].telefones[j]);
+            }
+        }
+        fprintf(arquivo, "\n");
+    }
+}
 
 //====CADASTRA USUARIO====
 void cadastraArquivo()
@@ -70,10 +93,10 @@ void cadastraArquivo()
             scanf("%s", novaPessoa.cpf);
             printf("Digite a data de nascimento: ");
             scanf("%s", novaPessoa.dataNascimento);
-            
+            novaPessoa.numTelefones = 0;
             arquivo = fopen("pessoa.txt", "a+");
-            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", ultimoID()+1, 
-            novaPessoa.nome,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento);
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %d\n", ultimoID()+1, 
+            novaPessoa.nome,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento,novaPessoa.numTelefones);
             fclose(arquivo);
             
             carregaArquivo();
@@ -119,6 +142,7 @@ void cadastraArquivo()
                                 printf("%d. %s\n", i + 1, novoTelefone.telefones[i]);
                             }
                         }
+                        escreverArquivo();
                     }
 
                     if(encontrouNOME!=1){
@@ -158,7 +182,7 @@ void cadastraArquivo()
                                 printf("%d. %s\n", i + 1, novoTelefone.telefones[i]);
                             }
                         }
-
+                        escreverArquivo();
                     }
                 }
                 
@@ -193,12 +217,7 @@ void editaArquivo()
         }
     }
     
-    arquivo = fopen("pessoa.txt", "w+");
-    for(i = 0; i<cont; i++)
-    {
-        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
-    }
-    fclose(arquivo);
+    escreverArquivo();
 }
 
 
