@@ -12,7 +12,7 @@ typedef struct p{
     char email[31];
     char cpf[12];
     char dataNascimento[11];
-	char **telefones;
+        char **telefones;
     int numTelefones;
 } PESSOA;
 
@@ -98,20 +98,20 @@ void cadastraArquivo()
             fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %d\n", ultimoID()+1, 
             novaPessoa.nome,novaPessoa.email, novaPessoa.cpf, novaPessoa.dataNascimento,novaPessoa.numTelefones);
             fclose(arquivo);
-            
+
             carregaArquivo();
         }else if(op==2){
-            
+
             imprimeArquivo();
-            
+
             int op_cadastro_tel;
             PESSOA novoTelefone;
             char nome_comparacao[31];
             int ID_comparacao, encontrouID = 0,encontrouNOME=0;
-            
+
             printf("\n(1) Cadastrar usando o Nome\n(2) Cadastrar usando o ID\n(3) Return\n");
             scanf("%d",&op_cadastro_tel);
-            
+
             if(op_cadastro_tel==1){
                 printf("Digite o nome: ");
                 scanf("%s",nome_comparacao);
@@ -119,7 +119,7 @@ void cadastraArquivo()
                 {
                     if(strcmp(nome_comparacao, lista[i].nome) == 0)
                     {
-                       
+
                         cadastrarTelefones(&novoTelefone);
                         lista[i].telefones = novoTelefone.telefones;
                         lista[i].numTelefones = novoTelefone.numTelefones;
@@ -135,7 +135,7 @@ void cadastraArquivo()
                         
                         carregaArquivo();*/
                         encontrouNOME = 1;
-                        
+
                         if (novoTelefone.numTelefones > 0) {
                             printf("Telefones:\n");
                             for (int i = 0; i < novoTelefone.numTelefones; i++) {
@@ -159,7 +159,7 @@ void cadastraArquivo()
                 {
                     if(lista[i].IDPessoa == ID_comparacao)
                     {
-                        
+
                         cadastrarTelefones(&novoTelefone);
                         lista[i].telefones = novoTelefone.telefones;
                         lista[i].numTelefones = novoTelefone.numTelefones;
@@ -173,9 +173,9 @@ void cadastraArquivo()
                         fclose(arquivo);
                         
                         carregaArquivo();*/
-                        
+
                         encontrouID = 1; 
-                        
+
                         if (novoTelefone.numTelefones > 0) {
                             printf("Telefones:\n");
                             for (int i = 0; i < novoTelefone.numTelefones; i++) {
@@ -185,18 +185,18 @@ void cadastraArquivo()
                         escreverArquivo();
                     }
                 }
-                
+
                 if(encontrouID!=1){
                     printf("ID inexistente\n");
                 }
             }
            // liberarTelefones(&novoTelefone);
-            
+
         }
         printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n(3) Return\n");
         scanf("%d",&op);
     }
-    
+
 }
 
 
@@ -204,19 +204,88 @@ void cadastraArquivo()
 void editaArquivo()
 {
     int i;
-    int IDPessoaAlteracao;
-    printf("Digite o ID para alteracao\n");
-    scanf("%d", &IDPessoaAlteracao);
-    for(i = 0; i<cont; i++)
-    {
-        if(lista[i].IDPessoa == IDPessoaAlteracao)
-        {
-            printf("Digite o nome\n");
-            scanf("%s", lista[i].nome);
-            break;
-        }
-    }
+    int IDPessoaAlteracao,op_editar,op_alteracao;
+    char NomePessoaAlteracao[31];
     
+    printf("\n(1) Editar usando o Nome\n(2) Editar usando o ID\n(3) Return\n");
+    scanf("%d",&op_editar);
+    
+    while(op_editar!=3){
+    	if(op_editar==1){
+    		
+    		printf("Digite o nome: ");
+                scanf("%s",NomePessoaAlteracao);
+                for(int i = 0; i<cont; i++)
+                {
+                    if(strcmp(NomePessoaAlteracao, lista[i].nome) == 0)
+                    {
+                    	printf("O que deseja alterar:\n(1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
+		            scanf("%d",&op_alteracao);
+		            switch (op_alteracao){
+		            	case 1:
+		            		printf("Digite o novo nome: ");
+		            		scanf("%s", lista[i].nome);
+		            		break;
+		            	case 2:
+		            		printf("Digite a data de nascimento: ");
+		            		scanf("%s", lista[i].dataNascimento);
+		            		break;
+		            	case 3:
+		            		printf("Digite o CPF: ");
+		            		scanf("%s", lista[i].cpf);
+		            		break;
+		            	case 4:
+		            		printf("Digite o Email: ");
+		            		scanf("%s", lista[i].email);
+		            		break;
+		            	case 5:
+		            		break;
+		            	default:
+		            		printf("Opcão invalida");
+		            }
+		        }else{
+		        	printf("ID invalido!");
+		        }
+                    }
+                }
+    	}else if(op_editar==2){
+		    printf("Digite o ID para alteracao\n");
+		    scanf("%d", &IDPessoaAlteracao);
+		    for(i = 0; i<cont; i++)
+		    {
+		        if(lista[i].IDPessoa == IDPessoaAlteracao)
+		        {
+		            printf("O que deseja alterar:\n(1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
+		            scanf("%d",&op_alteracao);
+		            switch (op_alteracao){
+		            	case 1:
+		            		printf("Digite o novo nome: ");
+		            		scanf("%s", lista[i].nome);
+		            		break;
+		            	case 2:
+		            		printf("Digite a data de nascimento: ");
+		            		scanf("%s", lista[i].dataNascimento);
+		            		break;
+		            	case 3:
+		            		printf("Digite o CPF: ");
+		            		scanf("%s", lista[i].cpf);
+		            		break;
+		            	case 4:
+		            		printf("Digite o Email: ");
+		            		scanf("%s", lista[i].email);
+		            		break;
+		            	case 5:
+		            		break;
+		            	default:
+		            		printf("Opcão invalida");
+		            }
+		        }else{
+		        	printf("ID invalido!");
+		        }
+		    }
+    	}
+    }
+
     escreverArquivo();
 }
 
@@ -248,7 +317,7 @@ void imprimeArquivo()
     for(i = 0; i<cont; i++)
     {
         printf("| %-2d | %-30s | %-30s | %-12s | %-11s |\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento);
-        
+
         if (lista[i].numTelefones > 0) {
             printf("Telefones:\n");
             for (int j = 0; j < lista[i].numTelefones; j++) {
@@ -319,7 +388,7 @@ void menu()
         printf("3 - Excluir\n");
         printf("4 - Consultar\n");
         printf("5 - Sair\n");
-        
+
         scanf("%d", &menu);
         switch(menu)
         {
