@@ -1,9 +1,9 @@
-//ADICIONADO AS VALIDAÇÕES NO CODIGO
+//O codigo a seguir depende que os arquivos sejam criados. é posssivel fazer inserção de telefones em outro arquivo
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
-#include <string.h>
+#include <string.h> 
 #define INFINITY (1<<20)
 #include <regex.h>
 #define EMAIL "([A-Z|a-z|0-9](\\.|_){0,1})+[A-Z|a-z|0-9]\\@([A-Z|a-z|0-9])+((\\.){0,1}[A-Z|a-z|0-9]){2,3}\\.[a-z]{2,3}"
@@ -327,10 +327,19 @@ void cadastrarTelefones(PESSOA *novoTelefone, int i) {
     do {
         // Alocando espaço para armazenar um telefone
         novoTelefone->telefones[novoTelefone->numTelefones] = (char *)malloc(15 * sizeof(char));
-
-        printf("Digite o telefone: ");
-        scanf("%s", novoTelefone->telefones[novoTelefone->numTelefones]);
-
+        
+        do{
+            printf("Digite o telefone: ");
+            scanf("%s", novoTelefone->telefones[novoTelefone->numTelefones]);
+            printf("%s",novoTelefone->telefones[novoTelefone->numTelefones]);
+            if(valida_exp_regular(TELEFONE,novoTelefone->telefones[novoTelefone->numTelefones])){
+                printf("Válido\n");
+            }else{
+                printf("Invalido!\n");
+            }
+        }while(!valida_exp_regular(TELEFONE,novoTelefone->telefones[novoTelefone->numTelefones]));
+        
+        
         novoTelefone->numTelefones++;
 
         // Perguntando se o usuário deseja cadastrar outro telefone
