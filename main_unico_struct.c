@@ -175,8 +175,16 @@ void cadastraArquivo()
     while(op!=3){
         if(op==1){
             PESSOA novaPessoa;
-            printf("Digite o nome: ");
-            scanf("%s", novaPessoa.nome);
+            
+            do{
+                printf("Digite o nome: ");
+                scanf("%s", novaPessoa.nome);
+                if(strlen(novaPessoa.nome)>2){
+                    printf("valido!\n");
+                }else{
+                    printf("Invalido!\n");
+                }
+            }while(strlen(novaPessoa.nome)<2);
             
             do{
                 printf("Digite o Email: ");
@@ -349,6 +357,7 @@ void editaArquivo()
 
 
     do{
+        imprimeArquivo();
         printf("\n(1) Editar usando o Nome\n(2) Editar usando o ID\n(3) Return\n");
         scanf("%d", &op_editar);
         if (op_editar == 1)
@@ -386,8 +395,6 @@ void editaArquivo()
                             break;
                         case 5:
                             break;
-                        default:
-                        printf("Opção inválida");
                     }
                 }
             }
@@ -399,7 +406,7 @@ void editaArquivo()
             {
                 if (IDPessoaAlteracao == lista[i].IDPessoa)
                 {
-                    printf("O que deseja alterar:\n (1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
+                    printf("O que deseja alterar:\n(1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
                     scanf("%d", &op_alteracao);
                     switch (op_alteracao)
                     {
@@ -430,7 +437,7 @@ void editaArquivo()
                     }
                 }
             }
-        }else{
+        }else if((op_editar !=3) && (op_editar !=2) && (op_editar !=1)){
             printf("Opção inválida!\n");
         }
     }while(op_editar != 3);
@@ -439,6 +446,7 @@ void editaArquivo()
 //====EXCLUI USUARIO====
 void excluiArquivo()
 {
+    imprimeArquivo();
     int IDPessoaExclusao;
     printf("Digite o ID para exclusao\n");
     scanf("%d", &IDPessoaExclusao);
@@ -449,8 +457,8 @@ void excluiArquivo()
         if (lista[i].IDPessoa == IDPessoaExclusao)
         {
             // Liberar telefones antes de excluir a pessoa
-            liberarTelefones(i);
-
+            if(lista[i].numTelefones>0)
+                liberarTelefones(i);
             // Não escrever a pessoa excluída no arquivo
             continue;
         }
