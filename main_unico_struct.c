@@ -506,26 +506,32 @@ void editaArquivo()
 void excluiArquivo()
 {
     imprimeArquivo();
+    //Excluir o registro na memória
+    arquivo = fopen("pessoa.txt", "w+");
     int IDPessoaExclusao;
     printf("Digite o ID para exclusao\n");
     scanf("%d", &IDPessoaExclusao);
-
     int i;
-    for (i = 0; i < cont; i++)
+    for(i = 0; i<cont; i++)
     {
-        if (lista[i].IDPessoa == IDPessoaExclusao)
+        if(lista[i].IDPessoa != IDPessoaExclusao)
         {
-            // Liberar telefones antes de excluir a pessoa
-            if(lista[i].numTelefones>0)
+            fprintf(arquivo, "%d ; %s ; %s ; %s ; %s ; %d\n", lista[i].IDPessoa, lista[i].nome,lista[i].email, lista[i].cpf, lista[i].dataNascimento,lista[i].numTelefones);
+            if (lista[i].numTelefones > 0) {
+               // lista[i].telefones = (char **)malloc(lista[i].numTelefones * sizeof(char *));
+                 for (int j = 0; j < lista[i].numTelefones; j++) {
+                    fprintf(arquivo, " ; %s", lista[i].telefones[j]);
+                }
+            }
+            fprintf(arquivo, "\n");
+        }else{
+            if(lista[i].numTelefones>0){
                 liberarTelefones(i);
-            // Não escrever a pessoa excluída no arquivo
-            continue;
+            }   
         }
-
-        fprintf(arquivo, "%d ; %s ; %s ; %s ; %s\n", lista[i].IDPessoa, lista[i].nome, lista[i].email, lista[i].cpf, lista[i].dataNascimento);
     }
-
     fclose(arquivo);
+    carregaArquivo();
 }
 
 
