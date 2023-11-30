@@ -16,7 +16,7 @@ typedef struct p{
     char email[31];
     char cpf[12];
     char dataNascimento[11];
-        char **telefones;
+    char **telefones;
     int numTelefones;
 } PESSOA;
 
@@ -30,7 +30,6 @@ void cadastraArquivo();
 void cadastrarTelefones();
 void liberarTelefones();
 int ultimoID();
-
 
 PESSOA lista[100];
 int cont;
@@ -184,7 +183,7 @@ void cadastraArquivo()
                 }else{
                     printf("Invalido!\n");
                 }
-            }while(strlen(novaPessoa.nome)<2);
+            }while(strlen(novaPessoa.nome)<=2);
             
             do{
                 printf("Digite o Email: ");
@@ -369,30 +368,61 @@ void editaArquivo()
             {
                 if (strcmp(NomePessoaAlteracao, lista[i].nome) == 0)
                 {
-                    printf("O que deseja alterar:\n (1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
+                    printf("O que deseja alterar:\n(1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
                     scanf("%d", &op_alteracao);
-                    switch (op_alteracao)
-                    {
+                    switch (op_alteracao) {
                         case 1:
-                            printf("Digite o novo nome: ");
-                            scanf("%s", lista[i].nome);
+                            do {
+                                printf("Digite o novo nome: ");
+                                scanf("%s", lista[i].nome);
+                                if (strlen(lista[i].nome) > 2) {
+                                    printf("Válido!\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (strlen(lista[i].nome) <= 2);
                             escreverArquivo();
                             break;
+                    
                         case 2:
-                            printf("Digite a data de nascimento: ");
-                            scanf("%s", lista[i].dataNascimento);
+                            do {
+                                printf("Digite a data de nascimento: ");
+                                scanf("%s", lista[i].dataNascimento);
+                                if (validarData(lista[i].dataNascimento) == 1) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (validarData(lista[i].dataNascimento) == 0);
                             escreverArquivo();
                             break;
+                    
                         case 3:
-                            printf("Digite o CPF: ");
-                            scanf("%s", lista[i].cpf);
+                            do {
+                                printf("Digite o CPF: ");
+                                scanf("%s", lista[i].cpf);
+                                if (validarCPF(lista[i].cpf) == 0) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (validarCPF(lista[i].cpf) == 1);
                             escreverArquivo();
                             break;
+                    
                         case 4:
-                            printf("Digite o Email: ");
-                            scanf("%s", lista[i].email);
+                            do {
+                                printf("Digite o Email: ");
+                                scanf("%s", lista[i].email);
+                                if (valida_exp_regular(EMAIL, lista[i].email)) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (!valida_exp_regular(EMAIL, lista[i].email));
                             escreverArquivo();
                             break;
+                    
                         case 5:
                             break;
                     }
@@ -408,32 +438,61 @@ void editaArquivo()
                 {
                     printf("O que deseja alterar:\n(1) Nome\n(2) Data de nascimento\n(3) CPF\n(4) Email\n(5) Return\n");
                     scanf("%d", &op_alteracao);
-                    switch (op_alteracao)
-                    {
+                    switch (op_alteracao) {
                         case 1:
-                            printf("Digite o novo nome: ");
-                            scanf("%s", lista[i].nome);
+                            do {
+                                printf("Digite o novo nome: ");
+                                scanf("%s", lista[i].nome);
+                                if (strlen(lista[i].nome) > 2) {
+                                    printf("Válido!\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (strlen(lista[i].nome) <= 2);
                             escreverArquivo();
                             break;
+                    
                         case 2:
-                            printf("Digite a data de nascimento: ");
-                            scanf("%s", lista[i].dataNascimento);
+                            do {
+                                printf("Digite a data de nascimento: ");
+                                scanf("%s", lista[i].dataNascimento);
+                                if (validarData(lista[i].dataNascimento) == 1) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (validarData(lista[i].dataNascimento) == 0);
                             escreverArquivo();
                             break;
+                    
                         case 3:
-                            printf("Digite o CPF: ");
-                            scanf("%s", lista[i].cpf);
+                            do {
+                                printf("Digite o CPF: ");
+                                scanf("%s", lista[i].cpf);
+                                if (validarCPF(lista[i].cpf) == 0) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (validarCPF(lista[i].cpf) == 1);
                             escreverArquivo();
                             break;
+                    
                         case 4:
-                            printf("Digite o Email: ");
-                            scanf("%s", lista[i].email);
+                            do {
+                                printf("Digite o Email: ");
+                                scanf("%s", lista[i].email);
+                                if (valida_exp_regular(EMAIL, lista[i].email)) {
+                                    printf("Válido\n");
+                                } else {
+                                    printf("Inválido!\n");
+                                }
+                            } while (!valida_exp_regular(EMAIL, lista[i].email));
                             escreverArquivo();
                             break;
+                    
                         case 5:
                             break;
-                        default:
-                        printf("Opção inválida");
                     }
                 }
             }
