@@ -1,11 +1,10 @@
 # Projeto Algoritmo
-Projeto Final – Algoritmos 2![](Aspose.Words.cada281d-f890-4652-9a87-630368d60e0c.001.png)
+## Projeto Final – Algoritmos 2![](Aspose.Words.cada281d-f890-4652-9a87-630368d60e0c.001.png)
 
-Informações
+### Informações
+Agenda telefônica que contenha os dados de Nome, Telefone, E-mail, CPF e Data de Nascimento. A agenda deve permitir que mais de um telefone seja cadastrado para a mesma pessoa.
 
-Para esta atividade, implementar uma agenda telefônica que contenha os dados de Nome, Telefone, E-mail, CPF e Data de Nascimento. A agenda deve permitir que mais de um telefone seja cadastrado para a mesma pessoa.
-
-Estrutura de Armazenamento
+### Estrutura de Armazenamento
 
 - Nome: Texto de 30 caracteres.
   - Telefone: Texto com 11 caracteres.
