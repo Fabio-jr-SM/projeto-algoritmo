@@ -36,8 +36,7 @@ int cont;
 FILE *arquivo;
 
 //VALIDACOES DE EXPRESSOES IRREGULARES
-int valida_exp_regular(char expreg[], char texto[])
-{
+int valida_exp_regular(char expreg[], char texto[]){
 	/* aloca espaço para a estrutura do tipo regex_t */
 	regex_t reg;
 
@@ -56,8 +55,7 @@ int valida_exp_regular(char expreg[], char texto[])
 }
 
 //VALIDAR DATA
-int validarData(const char *data) 
-{
+int validarData(const char *data) {
     regex_t regex;
 
     if (regcomp(&regex, DATA_PATTERN, REG_EXTENDED) != 0) {
@@ -77,8 +75,7 @@ int validarData(const char *data)
 }
 
 //VALIDAR CPF
-int validarCPF(char *cpf)
-{
+int validarCPF(char *cpf){
     int i, j, digito1 = 0, digito2 = 0;
     for (i = 0; i < 11; i++)
     {
@@ -122,8 +119,7 @@ int validarCPF(char *cpf)
 
 
 //====CARREGA ARQUIVO (ARQUIVO PARA MEMORIA)====
-void carregaArquivo()
-{
+void carregaArquivo(){
     cont = 0;
     arquivo = fopen("pessoa.txt", "r+");
 
@@ -149,8 +145,7 @@ void carregaArquivo()
 }
 
 //====CARREGA MEMORIA (MEMORIA PARA ARQUIVO)====
-void escreverArquivo()
-{
+void escreverArquivo(){
     arquivo = fopen("pessoa.txt", "w+");
     //printf("%d",cont);
     for(int k = 0; k < cont; k++) {
@@ -166,8 +161,7 @@ void escreverArquivo()
 }
 
 //====CADASTRA USUARIO====
-void cadastraArquivo()
-{
+void cadastraArquivo(){
     int op;
     printf("\n(1) Cadastrar pessoa\n(2) Cadastrar Telefone\n(3) Return\n");
     scanf("%d",&op);
@@ -301,8 +295,7 @@ void cadastraArquivo()
 
 
 // FUNÇÃO PARA CADASTRAR TELEFONES DINAMICAMENTE
-void cadastrarTelefones(PESSOA *novoTelefone, int i) 
-{
+void cadastrarTelefones(PESSOA *novoTelefone, int i) {
     // Liberar telefones existentes antes de cadastrar novos telefones
     liberarTelefones(i);
 
@@ -336,8 +329,7 @@ void cadastrarTelefones(PESSOA *novoTelefone, int i)
 
 
 // FUNÇÃO PARA LIBERAR A MEMÓRIA ALOCADA PARA OS TELEFONES
-void liberarTelefones(int indice) 
-{
+void liberarTelefones(int indice) {
     for (int i = 0; i < lista[indice].numTelefones; i++) {
         free(lista[indice].telefones[i]);
     }
@@ -348,8 +340,7 @@ void liberarTelefones(int indice)
 
 
 //====EDITA USUARIO====
-void editaArquivo()
-{
+void editaArquivo(){
     int i;
     int IDPessoaAlteracao, op_editar, op_alteracao;
     char NomePessoaAlteracao[31];
@@ -503,8 +494,7 @@ void editaArquivo()
 }
 
 //====EXCLUI USUARIO====
-void excluiArquivo()
-{
+void excluiArquivo(){
     imprimeArquivo();
     //Excluir o registro na memória
     arquivo = fopen("pessoa.txt", "w+");
@@ -536,8 +526,7 @@ void excluiArquivo()
 
 
 //====IMPRIME CADASTROS====
-void imprimeArquivo()
-{
+void imprimeArquivo(){
     int i;
      printf("| %-2s | %-30s | %-30s | %-12s | %-11s |\n", "ID", "Nome", "Email","CPF","Nascimento");
     for(i = 0; i<cont; i++)
@@ -553,8 +542,7 @@ void imprimeArquivo()
     }
 }
 
-int ultimoID()
-{
+int ultimoID(){
     int maiorID = -INFINITY;
     int i;
     for(i = 0; i<cont; i++)
@@ -566,8 +554,7 @@ int ultimoID()
     }
 }
 
-void menu()
-{
+void menu(){
     int menu;
     carregaArquivo();
     do{
@@ -612,8 +599,7 @@ void menu()
 }
 
 
-int main()
-{
+int main(){
     menu();
 
     return 0;
